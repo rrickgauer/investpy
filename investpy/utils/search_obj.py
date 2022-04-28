@@ -245,6 +245,11 @@ class SearchObj(object):
 
         self.information = dict()
 
+        try:
+            self.information['last'] = self._retrieve_last_price(root_)
+        except:
+            self.information['last'] = None
+
         for elements_ in path_:
             if investing_updated:
                 element = elements_.xpath(".//dd")[0]
@@ -298,6 +303,34 @@ class SearchObj(object):
                 pass
 
         return self.information
+        
+    
+    def _retrieve_last_price(self, root_):
+        """Class method used to retrieve the last price of the financial product of the current class instance.
+
+        Returns:
+            :obj:`float` - last price:
+                This method retrieves the last price from the current class instance of a financial product
+                from Investing.com.
+        """
+
+        try:
+            new_method = root_.xpath("//span[@data-test='instrument-price-last']")
+            
+            if new_method is not None and len(new_method) > 0:
+                # remove any commas
+                raw_text = str(new_method[0].text).replace(',','')
+                return float(raw_text)
+
+            old_method = root_.get_element_by_id("last_last")
+
+            if old_method is not None:
+                return float(old_method.text)
+
+            raise RuntimeError("ERR#0004: data retrieval error while scraping.")
+
+        except:
+            raise RuntimeError("ERR#0004: data retrieval error while scraping.")
 
     def retrieve_technical_indicators(self, interval="daily"):
         """Class method used to retrieve the technical indicators from the class instance of any financial product.
