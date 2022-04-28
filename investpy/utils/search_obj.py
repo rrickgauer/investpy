@@ -245,7 +245,10 @@ class SearchObj(object):
 
         self.information = dict()
 
-        self.information['last'] = self._retrieve_last_price(root_)
+        try:
+            self.information['last'] = self._retrieve_last_price(root_)
+        except:
+            self.information['last'] = None
 
         for elements_ in path_:
             if investing_updated:
@@ -315,7 +318,9 @@ class SearchObj(object):
             new_method = root_.xpath("//span[@data-test='instrument-price-last']")
             
             if new_method is not None and len(new_method) > 0:
-                return float(new_method[0].text)
+                # remove any commas
+                raw_text = str(new_method[0].text).replace(',','')
+                return float(raw_text)
 
             old_method = root_.get_element_by_id("last_last")
 

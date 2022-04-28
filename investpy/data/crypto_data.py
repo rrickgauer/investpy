@@ -156,7 +156,7 @@ def cryptos_as_dict(columns=None, as_json=False):
         raise IOError("ERR#0082: cryptos not found or unable to retrieve.")
 
     cryptos = cryptos[cryptos["status"] == "available"]
-    cryptos.drop(columns=["tag", "id", "status"], inplace=True)
+    # cryptos.drop(columns=["tag", "id", "status"], inplace=True)
     cryptos = cryptos.where(pd.notnull(cryptos), None)
 
     if columns is None:

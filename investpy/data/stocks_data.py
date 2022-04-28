@@ -196,7 +196,8 @@ def stocks_as_dict(country=None, columns=None, as_json=False):
     if stocks is None:
         raise IOError("ERR#0001: stocks list not found or unable to retrieve.")
 
-    stocks.drop(columns=["tag", "id"], inplace=True)
+    # RMR: dont remove the id or tag columns
+    # stocks.drop(columns=["tag", "id"], inplace=True)
     stocks = stocks.where(pd.notnull(stocks), None)
 
     if columns is None:
